@@ -7,7 +7,7 @@ body {
     background: linear-gradient(135deg, rgba(255, 255, 255, 0.5) 0%, rgba(235, 237, 238, 0.8) 100%), 
                 linear-gradient(135deg, #8B0000, #9B111E), 
                 linear-gradient(135deg, #006400, #228B22), 
-                linear-gradient(135deg, #00008B, #0000CD);
+                linear-gradient(135deg, #00008B, #0e00cd);
     background-blend-mode: overlay;
     position: relative;
     overflow: hidden;
