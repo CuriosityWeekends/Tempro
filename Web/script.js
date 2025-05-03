@@ -1,7 +1,7 @@
 const client = mqtt.connect('ws://192.168.68.106:9001');
 
-const sensorDataMap = new Map();
-const sensorLastSeenMap = new Map();
+const sensorDataMap = new Map();        // sensorID -> temperature
+const sensorLastSeenMap = new Map();    // sensorID -> timestamp (ms)
 
 const ctx = document.getElementById('tempChart').getContext('2d');
 
@@ -12,73 +12,41 @@ const chart = new Chart(ctx, {
         datasets: [{
             label: 'Temperature (°C)',
             data: [],
-            borderColor: '#00bcd4',
-            backgroundColor: 'rgba(0, 188, 212, 0.15)',
+            borderColor: '#4caf50',
+            backgroundColor: 'rgba(76, 175, 80, 0.1)',
             fill: true,
             tension: 0.4,
-            pointBackgroundColor: '#00e5ff',
-            pointBorderColor: '#00e5ff',
-            pointRadius: 5,
-            pointHoverRadius: 7
         }]
     },
     options: {
         responsive: true,
         maintainAspectRatio: false,
         animation: true,
-        plugins: {
-            legend: {
-                labels: {
-                    color: '#ffffff',
-                    font: {
-                        family: 'monospace',
-                        size: 14
-                    }
-                }
-            },
-            tooltip: {
-                backgroundColor: '#263238',
-                titleColor: '#00e5ff',
-                bodyColor: '#ffffff'
-            }
-        },
         scales: {
             y: {
                 beginAtZero: false,
-                ticks: {
-                    color: '#ffffff'
-                },
-                grid: {
-                    color: 'rgba(255, 255, 255, 0.1)'
-                },
                 title: {
                     display: true,
-                    text: 'Temperature (°C)',
-                    color: '#00e5ff'
+                    text: 'Temperature (°C)'
                 }
             },
             x: {
-                ticks: {
-                    color: '#ffffff'
-                },
-                grid: {
-                    color: 'rgba(255, 255, 255, 0.05)'
-                },
                 title: {
                     display: true,
-                    text: 'Sensor ID',
-                    color: '#00e5ff'
+                    text: 'Sensor ID'
                 }
             }
         }
     }
 });
 
+// Update the chart with live data
 function updateChart() {
     const now = Date.now();
 
+    // Remove sensors not seen in the last 10 seconds
     for (const [sensor, lastSeen] of sensorLastSeenMap.entries()) {
-        if (now - lastSeen > 6000) {
+        if (now - lastSeen > 6000) { // 10 seconds timeout
             sensorDataMap.delete(sensor);
             sensorLastSeenMap.delete(sensor);
         }
@@ -114,7 +82,7 @@ client.on('connect', () => {
 });
 
 client.on('message', (topic, message) => {
-    const sensor = topic.split('/')[1];
+    const sensor = topic.split('/')[1]; // e.g., "sensor1"
     const temp = parseFloat(message.toString());
 
     if (!isNaN(temp)) {
@@ -124,4 +92,5 @@ client.on('message', (topic, message) => {
     }
 });
 
+// Periodically check for inactive sensors
 setInterval(updateChart, 5000);
