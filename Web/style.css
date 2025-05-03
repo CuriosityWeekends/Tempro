@@ -1,234 +1,29 @@
+/* Global dark background and neon font styling */
 body {
-    font-family: 'Poppins', sans-serif;
-    padding: 40px;
-    text-align: center;
-    animation: fadeIn 1s ease-in-out;
-    color: #333;
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.5) 0%, rgba(235, 237, 238, 0.8) 100%), 
-                linear-gradient(135deg, #8B0000, #9B111E), 
-                linear-gradient(135deg, #006400, #228B22), 
-                linear-gradient(135deg, #00008B, #0e00cd);
-    background-blend-mode: overlay;
-    position: relative;
+    margin: 0;
+    padding: 0;
+    background-color: #0f0f1c;
+    color: #e0e0ff;
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 300;
+    letter-spacing: 0.5px;
     overflow: hidden;
-    animation: bgAnimate 10s ease infinite;
 }
 
-/* Animation for the background */
-@keyframes bgAnimate {
-    0% {
-        background-position: 0 0, 0 0, 0 0, 0 0;
-    }
-    50% {
-        background-position: 100% 100%, 100% 100%, 100% 100%, 100% 100%;
-    }
-    100% {
-        background-position: 0 0, 0 0, 0 0, 0 0;
-    }
-}
-
-/* Adding a subtle noise texture */
-body::after {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
+/* Chart container styling */
+#tempChart {
     width: 100%;
-    height: 100%;
-    background: url('https://www.transparenttextures.com/patterns/diagonal-noise.png'); /* Using a subtle noise texture */
-    opacity: 0.05;
-    pointer-events: none;
+    height: 100vh;
+    display: block;
+    background-color: #1a1a2e;
+    border: 2px solid #0ff;
+    border-radius: 16px;
+    padding: 1rem;
+    box-sizing: border-box;
+    box-shadow: 0 0 30px rgba(0, 255, 255, 0.2);
 }
 
-h1 {
-    font-size: 48px;
-    margin-bottom: 20px;
-    animation: slideDown 0.5s ease-in-out;
-    color: #ffffff;
-    font-weight: bold;
-}
-
-.cards {
-    display: flex;
-    justify-content: center;
-    gap: 24px;
-    flex-wrap: wrap;
-    margin-bottom: 40px;
-}
-
-.sensor-box {
-    padding: 24px;
-    font-size: 20px;
-    border-radius: 20px;
-    width: 180px;
-    font-weight: bold;
-    color: white;
-    animation: bounceIn 0.8s ease-out;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-}
-
-.sensor-box:hover {
-    transform: scale(1.07);
-    box-shadow: 0 15px 30px rgba(255, 255, 255, 0.575);
-}
-
-/* Sensor Colors for 10 Boxes (Updated Gradients) */
-.sensor-box:nth-child(1) {
-    background: linear-gradient(to right, #8B0000, #9B111E);
-}
-
-.sensor-box:nth-child(2) {
-    background: linear-gradient(to right, #006400, #228B22);
-}
-
-.sensor-box:nth-child(3) {
-    background: linear-gradient(to right, #00008B, #0000CD);
-}
-
-.sensor-box:nth-child(4) {
-    background: linear-gradient(to right, #FF4500, #FF6347);
-}
-
-.sensor-box:nth-child(5) {
-    background: linear-gradient(to right, #8B4513, #A0522D);
-}
-
-.sensor-box:nth-child(6) {
-    background: linear-gradient(to right, #2F4F4F, #556B2F);
-}
-
-.sensor-box:nth-child(7) {
-    background: linear-gradient(to right, #4B0082, #6A5ACD);
-}
-
-.sensor-box:nth-child(8) {
-    background: linear-gradient(to right, #A52A2A, #B22222);
-}
-
-.sensor-box:nth-child(9) {
-    background: linear-gradient(to right, #800080, #8A2BE2);
-}
-
-.sensor-box:nth-child(10) {
-    background: linear-gradient(to right, #B22222, #D15F5F);
-}
-
-.chart-legend {
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 12px;
-    margin-bottom: 20px;
-}
-
-.chart-legend span {
-    padding: 6px 14px;
-    border-radius: 12px;
-    font-weight: bold;
-    font-size: 14px;
-    color: white;
-}
-
-/* Legend Colors for 10 Sensors */
-.chart-legend span:nth-child(1) {
-    background: #8B0000;
-}
-
-.chart-legend span:nth-child(2) {
-    background: #006400;
-}
-
-.chart-legend span:nth-child(3) {
-    background: #00008B;
-}
-
-.chart-legend span:nth-child(4) {
-    background: #FF4500;
-}
-
-.chart-legend span:nth-child(5) {
-    background: #8B4513;
-}
-
-.chart-legend span:nth-child(6) {
-    background: #2F4F4F;
-}
-
-.chart-legend span:nth-child(7) {
-    background: #4B0082;
-}
-
-.chart-legend span:nth-child(8) {
-    background: #A52A2A;
-}
-
-.chart-legend span:nth-child(9) {
-    background: #800080;
-}
-
-.chart-legend span:nth-child(10) {
-    background: #B22222;
-}
-
-/* Chart Container with a Separate Highlighting Background */
-.chart-container {
-    padding: 40px;
-    border-radius: 20px;
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.5) 0%, rgba(235, 237, 238, 0.8) 100%),
-                linear-gradient(135deg, #FFD700, #FF6347), /* Gold to Red gradient for highlight */
-                linear-gradient(135deg, #008080, #20B2AA), /* Teal to Light Sea Green gradient */
-                linear-gradient(135deg, #4682B4, #5F9EA0); /* Steel Blue to Cadet Blue gradient */
-    background-blend-mode: overlay;
-    position: relative;
-    overflow: hidden;
-    animation: bgAnimate 10s ease infinite;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2); /* Adding subtle shadow */
-}
-
-/* Adjusting Chart Legend for better visibility */
-.chart-legend {
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 12px;
-    margin-bottom: 20px;
-    z-index: 10; /* Ensure the legend appears above the chart */
-}
-
-.chart-legend span {
-    padding: 6px 14px;
-    border-radius: 12px;
-    font-weight: bold;
-    font-size: 14px;
-    color: white;
-    z-index: 10;
-}
-
-@keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-}
-
-@keyframes slideDown {
-    from {
-        transform: translateY(-30px);
-        opacity: 0;
-    }
-    to {
-        transform: translateY(0);
-        opacity: 1;
-    }
-}
-
-@keyframes bounceIn {
-    0%   { transform: scale(0.9); opacity: 0; }
-    60%  { transform: scale(1.05); opacity: 1; }
-    100% { transform: scale(1); }
-}
-
-@media (max-width: 600px) {
-    .sensor-box {
-        width: 100%;
-    }
+/* Optional: Add a glowing text header if needed */
+h1, h2, h3, p {
+    text-shadow: 0 0 6px #0ff;
 }

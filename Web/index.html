@@ -2,34 +2,29 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>TemPro - Room Temperature Monitor</title>
-  <script src="https://cdn.jsdelivr.net/npm/mqtt/dist/mqtt.min.js"></script>
+  <title>TemPro Dashboard</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <link rel="stylesheet" href="style.css">
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/mqtt/dist/mqtt.min.js"></script>
+  <style>
+    body {
+      font-family: sans-serif;
+      margin: 20px;
+    }
+    #chart-container {
+      width: 100%;
+      height: 500px;
+    }
+    canvas {
+      width: 100% !important;
+      height: 100% !important;
+    }
+  </style>
 </head>
 <body>
-  <div class="container">
-    <h1 class="fade-in">🌡️ TemPro Dashboard</h1>
-
-    <div class="cards fade-in-delayed">
-      <div class="sensor-box" id="box1">Sensor 1: <span id="val1">--</span> °C</div>
-      <div class="sensor-box" id="box2">Sensor 2: <span id="val2">--</span> °C</div>
-      <div class="sensor-box" id="box3">Sensor 3: <span id="val3">--</span> °C</div>
-      <div class="sensor-box" id="box4">Sensor 4: <span id="val4">--</span> °C</div>
-      <div class="sensor-box" id="box5">Sensor 5: <span id="val5">--</span> °C</div>
-      <div class="sensor-box" id="box6">Sensor 6: <span id="val6">--</span> °C</div>
-      <div class="sensor-box" id="box6">Sensor 7: <span id="val6">--</span> °C</div>
-      <div class="sensor-box" id="box6">Sensor 8: <span id="val6">--</span> °C</div>
-      <div class="sensor-box" id="box6">Sensor 9: <span id="val6">--</span> °C</div>
-      <div class="sensor-box" id="box6">Sensor 10: <span id="val6">--</span> °C</div>
-    </div>
-
-    <div class="chart-container fade-in-late">
-      <canvas id="combinedChart" width="800" height="400"></canvas>
-    </div>
+  <h2>TemPro Sensor Temperature</h2>
+  <div id="chart-container">
+    <canvas id="tempChart"></canvas>
   </div>
-
   <script src="script.js"></script>
 </body>
 </html>
