@@ -2,12 +2,8 @@
 #include <PubSubClient.h>
 #include <DHT.h>
 
-// WiFi credentials
-const char* ssid = "";
-const char* password = "";
-
-// MQTT broker IP
-const char* mqtt_server = "192.168.x.x"; // Your local IP running Mosquitto
+// All credentials
+#include "secrets.h"
 
 #define DHTPIN D4      // GPIO2 (change if wired differently)
 #define DHTTYPE DHT22
