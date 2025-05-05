@@ -15,12 +15,13 @@
 
 ## 📁 Project Structure
 
+```bash
 TemPro/
 ├── Code For NodeMCU/ # ESP8266 firmware (Arduino-compatible)
 ├── ESP8266-broker/ # MQTT broker setup and config
 ├── Web/ # Web UI for live temperature display
 └── README.md # Project documentation
-
+```
 
 ---
 
