@@ -1,4 +1,7 @@
-const client = mqtt.connect('ws://192.168.68.106:9001');
+const client = mqtt.connect('ws://dev.streakon.net:9001', {
+    username: 'tempro',
+    password: 'firstfloor'
+    });
 
 const sensorDataMap = new Map();        // sensorID -> temperature
 const sensorLastSeenMap = new Map();    // sensorID -> timestamp (ms)
