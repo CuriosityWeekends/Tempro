@@ -40,7 +40,7 @@ void reconnect() {
   // Loop until we're reconnected
   while (!client.connected()) {
     Serial.print("Attempting MQTT connection...");
-    if (client.connect("TemProSensor1")) {
+    if (client.connect("TemProSensor1", mqtt_username, mqtt_password) {
       Serial.println("connected");
     } else {
       Serial.print("failed, rc=");
