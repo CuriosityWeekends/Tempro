@@ -28,8 +28,8 @@ public:
 
 MyMQTTBroker myBroker;
 
-const char* ssid = "Curiosity Weefi";
-const char* password = "12345678910";
+const char* ssid = "WiFi-SSID";
+const char* password = "WiFi-Password";
 
 void setup() {
   Serial.begin(115200);
