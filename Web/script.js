@@ -1,6 +1,6 @@
-const client = mqtt.connect('ws://dev.streakon.net:9001', {
-    username: 'tempro',
-    password: 'firstfloor'
+const client = mqtt.connect('ws://serverip:9001', {
+    username: 'user',
+    password: 'password'
     });
 
 const sensorDataMap = new Map();        // sensorID -> temperature
