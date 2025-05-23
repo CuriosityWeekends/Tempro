@@ -161,6 +161,7 @@ function updateChart() {
   let calibrationBaseline = null;
   document.getElementById('calibrateBtn').addEventListener('click', async () => {
     const { isConfirmed } = await Swal.fire({
+      theme: 'dark',
       title: 'Preparation',
       text: 'Please place all sensors in the same position for calibration.',
       icon: 'info',
@@ -171,6 +172,7 @@ function updateChart() {
 
     if (!isConfirmed) return; // If user cancels, do nothing
     Swal.fire({
+      theme: 'dark',
       title: 'Calibrating...',
       didOpen: () => {
         Swal.showLoading();
@@ -182,6 +184,7 @@ function updateChart() {
     
     if (values.length === 0) {
       Swal.fire({
+        theme: 'dark',
         icon: 'error',
         title: 'Oops...',
         text: 'No sensor data available for calibration.',
@@ -217,6 +220,7 @@ function updateChart() {
     }
     setTimeout(() => { // simulate a bit of delay
       Swal.fire({
+        theme: 'dark',
         icon: 'success',
         title: 'Calibration Complete!',
         html: `
