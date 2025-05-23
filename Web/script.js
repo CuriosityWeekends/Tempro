@@ -215,7 +215,7 @@ function updateChart() {
         `
       });
     }
-    setTimeout(() => { // simulate delay
+    setTimeout(() => { // simulate a bit of delay
       Swal.fire({
         icon: 'success',
         title: 'Calibration Complete!',
