@@ -202,7 +202,7 @@ function updateChart() {
     for (const [sensor, temp] of sensorDataMap.entries()) {
       sensorOffsetMap.set(sensor, Median - temp); // To Save The Offset for every Sensor!
     }
-    calibrationBaseline = Median; // or let user input this
+    calibrationBaseline = Median;
     chart.getDatasetMeta(0).hidden = true;
     chart.getDatasetMeta(2).hidden = false;
     const allOffsetsAreZero = Array.from(sensorOffsetMap.values()).every(offset => Math.abs(offset) < 0.1);
