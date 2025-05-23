@@ -98,7 +98,6 @@ function updateChart() {
   
 	const labels = entries.map(([sensor]) => sensor);
 	const values = entries.map(([_, temp]) => temp + calibrationOffset);
-cvnm
   
 	chart.data.labels = labels;
 	chart.data.datasets[0].data = values;
