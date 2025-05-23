@@ -5,6 +5,7 @@ const client = mqtt.connect('ws://dev.streakon.net:9001', {
 
 const sensorDataMap = new Map();
 const sensorLastSeenMap = new Map();
+const sensorOffsetMap = new Map(); // Calibrated Offset Map
 const ctx = document.getElementById('tempChart').getContext('2d');
 const mqttStatus = document.getElementById('mqttStatus');
 
@@ -15,12 +16,13 @@ const chart = new Chart(ctx, {
       datasets: [
         {
           label: 'Temperature (°C)',
+          hidden: false,
           data: [],
           borderColor: (context) => {
             const value = context.raw;
             if (value > 30) return 'red';         // High danger
             if (value > 25) return 'orange';      // Warm
-            return '#4caf50';                     // Safe (green)
+            return 'hsl(189, 62.40%, 38.60%)';                     // Safe (green)
           },
           backgroundColor: 'rgba(59, 130, 246, 0.1)',
           fill: true,
@@ -44,6 +46,30 @@ const chart = new Chart(ctx, {
           borderWidth: 2,
           fill: false,
           pointRadius: 0
+        },
+        {
+          label: 'Calibrated Temperature (°C)',
+          hidden: true,
+          data: [],
+          borderColor: (context) => {
+            const value = context.raw;
+            if (value > 30) return 'red';         // High danger
+            if (value > 25) return 'orange';      // Warm
+            return 'hsl(115, 62.40%, 38.60%)';                     // Safe (green)
+          },
+          backgroundColor: 'rgba(59, 246, 246, 0.1)',
+          fill: true,
+          tension: 0.4,
+          pointRadius: 6,
+          pointHoverRadius: 8,
+          pointBorderWidth: 2,
+          pointBorderColor: '#ffffff',
+          pointBackgroundColor: (context) => {
+            const value = context.raw;
+            if (value > 30) return 'red';
+            if (value > 25) return 'orange';
+            return '#4caf50';
+          },
         }
       ]
     },
@@ -97,18 +123,19 @@ function updateChart() {
 	});
   
 	const labels = entries.map(([sensor]) => sensor);
-	const values = entries.map(([_, temp]) => temp + calibrationOffset);
-  
+	const values = entries.map(([sensor, temp]) => temp);
+  const calibratedValues = entries.map(([sensor, temp]) => temp + (sensorOffsetMap.get(sensor) || 0));
+
 	chart.data.labels = labels;
 	chart.data.datasets[0].data = values;
-  
+  chart.data.datasets[2].data = calibratedValues;
 	if (values.length > 0) {
-        const minTemp = Math.min(...values);
-        const maxTemp = Math.max(...values);
+        const minTemp = Math.min(...values, ...calibratedValues);
+        const maxTemp = Math.max(...values, ...calibratedValues);
         chart.options.scales.y.min = Math.floor(minTemp - 5);
         chart.options.scales.y.max = Math.ceil(maxTemp + 5);
       
-        const highestTemp = Math.max(...values);
+        const highestTemp = Math.max(...calibratedValues);
       
         if (highestTemp > 30) {
           statusText.textContent = 'High';
@@ -131,26 +158,75 @@ function updateChart() {
   
 	chart.update();
   }
-  let calibrationOffset = 0;
   let calibrationBaseline = null;
-  document.getElementById('calibrateBtn').addEventListener('click', () => {
+  document.getElementById('calibrateBtn').addEventListener('click', async () => {
+    const { isConfirmed } = await Swal.fire({
+      title: 'Preparation',
+      text: 'Please place all sensors in the same position for calibration.',
+      icon: 'info',
+      confirmButtonText: 'Ready',
+      allowOutsideClick: false,
+      allowEscapeKey: false,
+    });
+
+    if (!isConfirmed) return; // If user cancels, do nothing
+    Swal.fire({
+      title: 'Calibrating...',
+      didOpen: () => {
+        Swal.showLoading();
+      },
+      allowOutsideClick: false,
+      allowEscapeKey: false
+    });
     const values = Array.from(sensorDataMap.values());
-  
+    
     if (values.length === 0) {
-      alert("No sensor data available for calibration.");
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: 'No sensor data available for calibration.',
+        timer: 3000,
+        showConfirmButton: false,
+        timerProgressBar: true
+      });
       return;
     }
-  
+    
     const sorted = [...values].sort((a, b) => a - b);
     const middle = Math.floor(sorted.length / 2);
-    const actualMedian = sorted.length % 2 !== 0
+    const Median = sorted.length % 2 !== 0
       ? sorted[middle]
       : (sorted[middle - 1] + sorted[middle]) / 2;
-  
-    calibrationBaseline = 28; // or let user input this
-    calibrationOffset = calibrationBaseline - actualMedian;
-  
-    alert(`Calibration complete!\nBaseline set to ${calibrationBaseline.toFixed(2)}°C\nOffset: ${calibrationOffset.toFixed(2)}°C`);
+    
+    sensorOffsetMap.clear();
+    for (const [sensor, temp] of sensorDataMap.entries()) {
+      sensorOffsetMap.set(sensor, Median - temp); // To Save The Offset for every Sensor!
+    }
+    calibrationBaseline = Median; // or let user input this
+    chart.getDatasetMeta(0).hidden = true;
+    chart.getDatasetMeta(2).hidden = false;
+    const allOffsetsAreZero = Array.from(sensorOffsetMap.values()).every(offset => Math.abs(offset) < 0.1);
+
+    if (allOffsetsAreZero) {
+      Swal.update({
+        html: `
+          <p>Analyzing sensor data...</p>
+          <p style="color:green;"><i>Fun Fact:</i> All your sensors are already in great sync! 🎯</p>
+        `
+      });
+    }
+    setTimeout(() => { // simulate delay
+      Swal.fire({
+        icon: 'success',
+        title: 'Calibration Complete!',
+        html: `
+          <p>Baseline set to ${calibrationBaseline.toFixed(2)}°C</p>
+          <p><b>Important:</b> Now place all sensors in their appropriate positions as usual.</p>
+        ${allOffsetsAreZero ? `<p style="font-size: 0.85em; color: #4caf50; margin-top: 10px;"><i>Fun fact: All your sensors were already reporting nearly identical temperatures! 📟</i></p>` : ''}
+        `,
+        confirmButtonText: 'Got it!',
+      });
+    }, 1500);
   });
   
 
